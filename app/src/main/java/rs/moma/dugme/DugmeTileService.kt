@@ -3,13 +3,10 @@ package rs.moma.dugme
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import androidx.annotation.RequiresApi
 import kotlin.concurrent.thread
 
-@RequiresApi(Build.VERSION_CODES.N)
 class DugmeTileService : TileService() {
     override fun onClick() {
         thread {
