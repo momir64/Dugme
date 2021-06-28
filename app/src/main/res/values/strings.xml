@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Dugme</string>
+    <string name="change_sound">Change sound</string>
+    <string name="restore_sound">Restore sound</string>
 </resources>
