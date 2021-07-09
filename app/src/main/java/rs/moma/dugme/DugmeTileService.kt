@@ -9,6 +9,7 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
+import androidx.documentfile.provider.DocumentFile
 import kotlin.concurrent.thread
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -20,9 +21,11 @@ class DugmeTileService : TileService() {
                 var duration = 1700L
                 val mediaPlayer: MediaPlayer
                 sharedPref.getString("Sound", null).let { uri ->
-                    if (uri == null)
+                    if (uri == null || !DocumentFile.fromSingleUri(applicationContext, uri.toUri())!!.exists()) {
                         mediaPlayer = MediaPlayer.create(applicationContext, R.raw.buzz)
-                    else {
+                        if (uri != null)
+                            sharedPref.edit().remove("Sound").apply()
+                    } else {
                         mediaPlayer = MediaPlayer()
                         val parcelFileDescriptor = contentResolver.openFileDescriptor(uri.toUri(), "r")
                         mediaPlayer.setDataSource(parcelFileDescriptor?.fileDescriptor)

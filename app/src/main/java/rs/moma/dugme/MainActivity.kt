@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.documentfile.provider.DocumentFile
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -25,9 +26,11 @@ class MainActivity : AppCompatActivity() {
                     var duration = 1700L
                     val mediaPlayer: MediaPlayer
                     sharedPref.getString("Sound", null).let { uri ->
-                        if (uri == null)
+                        if (uri == null || !DocumentFile.fromSingleUri(applicationContext, uri.toUri())!!.exists()) {
                             mediaPlayer = MediaPlayer.create(applicationContext, R.raw.buzz)
-                        else {
+                            if (uri != null)
+                                sharedPref.edit().remove("Sound").apply()
+                        } else {
                             mediaPlayer = MediaPlayer()
                             val parcelFileDescriptor = contentResolver.openFileDescriptor(uri.toUri(), "r")
                             mediaPlayer.setDataSource(parcelFileDescriptor?.fileDescriptor)
